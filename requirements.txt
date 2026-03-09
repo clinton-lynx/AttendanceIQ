@@ -1,0 +1,7 @@
+Flask
+Flask-CORS
+face_recognition
+numpy
+Pillow
+gspread
+oauth2client
