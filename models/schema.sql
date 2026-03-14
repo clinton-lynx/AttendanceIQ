@@ -6,11 +6,12 @@ CREATE TABLE IF NOT EXISTS admins (
 );
 
 -- Students Table
+-- Students Table
 CREATE TABLE IF NOT EXISTS students (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     student_id TEXT UNIQUE NOT NULL,
     name TEXT NOT NULL,
-    face_encoding BLOB NOT NULL
+    face_encoding BLOB  -- removed NOT NULL, face added later during enrollment
 );
 
 -- Sessions Table

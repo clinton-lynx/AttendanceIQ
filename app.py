@@ -21,9 +21,11 @@ def create_app():
 
     @app.route('/')
     def index():
-        # Serve the single placeholder HTML page
-        from flask import send_from_directory
-        return send_from_directory('static', 'index.html')
+        return jsonify({
+            "success": True, 
+            "message": "AttendanceIQ API is Running",
+            "version": "1.0.0"
+        })
 
     @app.errorhandler(404)
     def not_found(e):
