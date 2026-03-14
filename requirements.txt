@@ -5,3 +5,7 @@ numpy
 Pillow
 gspread
 oauth2client
+flask
+flask-cors
+openpyxl
+gunicorn
