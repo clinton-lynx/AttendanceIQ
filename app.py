@@ -9,10 +9,18 @@ from routes.students import students_bp
 from routes.auth import auth_bp
 from routes.sessions import sessions_bp
 from routes.attendance import attendance_bp
+from database import init_db
+from seed import seed_students
 
 def create_app():
     app = Flask(__name__)
     CORS(app)
+
+
+      # Initialize database and seed students on every startup
+    init_db()
+    seed_students()
+
 
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(students_bp, url_prefix='/api/students')
