@@ -44,15 +44,10 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 import config
 from routes.students import students_bp
-from database import init_db
-from seed import seed_students  
 
 def create_app():
     app = Flask(__name__)
     CORS(app)
-
-    init_db()          # creates tables
-    seed_students()    # populates students
 
     app.register_blueprint(students_bp, url_prefix='/api/students')
 

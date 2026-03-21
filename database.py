@@ -4,7 +4,7 @@ from config import DB_PATH
 
 def get_db_connection():
     """Returns a connection to the SQLite database."""
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=30)
     conn.row_factory = sqlite3.Row
     return conn
 

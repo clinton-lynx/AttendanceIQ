@@ -11,3 +11,4 @@ CONFIDENCE_THRESHOLD = 0.6
 # Server Configuration
 PORT = 5000
 HOST = "0.0.0.0"
+DEBUG = True
