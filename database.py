@@ -1,53 +1,47 @@
-# import sqlite3
-# import os
-# from config import DB_PATH
-
-# def get_db_connection():
-#     """Returns a connection to the SQLite database."""
-#     conn = sqlite3.connect(DB_PATH, timeout=30)
-#     conn.row_factory = sqlite3.Row
-#     return conn
-
-# def init_db():
-#     """Initializes the database with tables from schema.sql."""
-#     # Ensure the parent directory exists
-#     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-    
-#     schema_path = os.path.join(os.path.dirname(__file__), 'models', 'schema.sql')
-    
-#     with get_db_connection() as conn:
-#         with open(schema_path, 'r') as f:
-#             conn.executescript(f.read())
-#         conn.commit()
-#     print("Database initialized successfully.")
-
-# if __name__ == '__main__':
-#     init_db()
-
-
-
-
-import sqlite3
-import os
-from config import DB_PATH
+import psycopg2
+import psycopg2.extras
+from config import DATABASE_URL
 
 def get_db_connection():
-    """Returns a connection to the SQLite database."""
-    conn = sqlite3.connect(DB_PATH, timeout=30)
-    conn.row_factory = sqlite3.Row
+    """Returns a connection to the PostgreSQL database."""
+    conn = psycopg2.connect(DATABASE_URL, cursor_factory=psycopg2.extras.RealDictCursor)
     return conn
 
 def init_db():
-    """Initializes the database with tables from schema.sql."""
-    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-    
-    schema_path = os.path.join(os.path.dirname(__file__), 'models', 'schema.sql')
-    
+    """Initializes the database with tables."""
     conn = get_db_connection()
-    with open(schema_path, 'r') as f:
-        conn.executescript(f.read())
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS students (
+            id SERIAL PRIMARY KEY,
+            student_id TEXT UNIQUE NOT NULL,
+            name TEXT NOT NULL,
+            face_encoding TEXT
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS sessions (
+            id SERIAL PRIMARY KEY,
+            start_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            end_time TIMESTAMP,
+            is_active BOOLEAN DEFAULT TRUE
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS attendance (
+            id SERIAL PRIMARY KEY,
+            session_id INTEGER NOT NULL REFERENCES sessions(id),
+            student_id TEXT NOT NULL REFERENCES students(student_id),
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
     conn.commit()
-    conn.close()  # explicitly close instead of relying on 'with'
+    cursor.close()
+    conn.close()
     print("Database initialized successfully.")
 
 if __name__ == '__main__':

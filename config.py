@@ -1,9 +1,26 @@
+# import os
+
+# BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+# # Database Configuration
+# DB_PATH = os.path.join(BASE_DIR, "attendance.db")
+
+# # Face Recognition Configuration
+# CONFIDENCE_THRESHOLD = 0.6
+
+# # Server Configuration
+# PORT = 5000
+# HOST = "0.0.0.0"
+# DEBUG = True
+
+
 import os
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-
 # Database Configuration
-DB_PATH = os.path.join(BASE_DIR, "attendance.db")
+DATABASE_URL = os.environ.get(
+    "DATABASE_URL",
+    "postgresql://attendanceiq_db_2_user:hnRNAuEIAVPIH3TrNLuYsBQFYno42wpj@dpg-d77vknkijhs73a8n81g-a/attendanceiq_db_2"
+)
 
 # Face Recognition Configuration
 CONFIDENCE_THRESHOLD = 0.6
@@ -11,4 +28,4 @@ CONFIDENCE_THRESHOLD = 0.6
 # Server Configuration
 PORT = 5000
 HOST = "0.0.0.0"
-DEBUG = True
+DEBUG = False
