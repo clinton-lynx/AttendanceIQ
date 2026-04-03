@@ -1,3 +1,98 @@
+# from database import get_db_connection
+
+# STUDENTS = [
+#     ("20201775", "ADEBANJO ABDULBASIT ADETOLA"),
+#     ("20201777", "ADENIJI YUSUF JOSEPH"),
+#     ("20201779", "ADEOTI CLINTON ADEKUNLE"),
+#     ("20201780", "ADESANYA EMMANUEL OLAJIDE"),
+#     ("20201781", "ADESANYA KOREDE JAMES"),
+#     ("20201783", "AJINOMOH FOLAHANMI DAVID"),
+#     ("20201784", "AKANNI MARVELLOUS ALEXANDER"),
+#     ("20201785", "AKINSANYA TAIWO VICTOR"),
+#     ("20201786", "AKINYELE PELUMI AYOMIDE"),
+#     ("20201787", "ALAO BUSAYO SUNDAY"),
+#     ("20201788", "ALAYANDE DANIEL OLUWATOSIN"),
+#     ("20201789", "BABAYANJU ABDUL-HAKEEM ADEJARE"),
+#     ("20201790", "BALOGUN MOSES ERIJESU"),
+#     ("20201791", "DAMILARE OMOLASHO SOLOMON"),
+#     ("20201792", "ENITAN SAMUEL AYOMIKUN"),
+#     ("20201795", "FALOLA IDRIS BABATUNDE"),
+#     ("20201796", "HAMZAT KOZEEM MAYOWA"),
+#     ("20201797", "ILOABUSIAKA SAMUEL FREDRICK"),
+#     ("20201798", "JAMES EMEKA PETER"),
+#     ("20201799", "JIMO MUBARAK ADEMOLA"),
+#     ("20201800", "KELANI FATAI ADEWOLE"),
+#     ("20201801", "MAKINDE ANJOLA ENOCH"),
+#     ("20201803", "MUSA SAMAD AYOMIDE"),
+#     ("20201804", "NWACHUKWU PHILIP CHUKWUEBUKA"),
+#     ("20201806", "ODUNOLA PROMISE ADEBARE"),
+#     ("20201807", "OGBELADE DAVID OLUWAPAMILERIN"),
+#     ("20201808", "OJELADE VICTOR OPEYEMI"),
+#     ("20201809", "OLAJIDE FEMI FAVOUR"),
+#     ("20201811", "OLANIYAN PRECIOUS OLAWUMI"),
+#     ("20201812", "OLODUDE VICTOR ENIOLA"),
+#     ("20201813", "OLONADE IFEOLUWA AYOMIDE"),
+#     ("20201815", "OLUMAYOWA DAMILOLA OLAKUNLE"),
+#     ("20201816", "OLUSUNMADE MARVELLOUS OLUWASEYE"),
+#     ("20201817", "OMOWA DANIEL LIBERTY"),
+#     ("20201819", "ONIYIDE MOTUNRAYO SAIDAT"),
+#     ("20201820", "OPADOTUN OLUWATOBILOBA TEMISAN"),
+#     ("20201822", "OYENIJI OLUWAPOLORE ALEXANDER"),
+#     ("20201823", "OYETUNDE SULAIMON"),
+#     ("20201824", "OYEWOLE TEMITOPE KEHINDE"),
+#     ("20201827", "SEIDU MATHEW TIMILEYIN"),
+#     ("20201830", "TALABI QUADRI ADEBAYO"),
+#     ("20201831", "TORIOLA WALIU AYOBAMI"),
+#     ("20201833", "UTI EZEKIEL CHUKWUTEM"),
+#     ("20201834", "YAKUB BABATUNDE ABDUL-RASHEED"),
+#     ("20204899", "ADENIYI DAVID OLUWADEMILADE"),
+#     ("20204900", "AKINBOLA PRAISE OLASUBOMI"),
+#     ("20204901", "AKINYINKA OLUWAPELUMI AYOKUNMI"),
+#     ("20204902", "AWOYOMI PHILEMON AKINWUNMI"),
+#     ("20204903", "FOLARANMI ADEMOLA ABAYOMI"),
+#     ("20204907", "OLANIYAN GIDEON OLAOLUWA"),
+#     ("20204909", "OLOGBONSAYE VICTOR AYOMIDE"),
+#     ("20204910", "ONALAJA FAVOUR"),
+#     ("20204911", "OSHADARE VICTOR TOLUWANIMI"),
+#     ("20204912", "SOKUNBI BENEDICT OLUWATOYOSI"),
+#     ("20204913", "TINUBU TOLUWANI FUWAGBOYE"),
+#     ("20224952", "OYE FAITH OLUWASIMISOLA"),
+#     ("20222194", "OLUWADAMILOLA DAVID OLUFONDE"),
+#     ("20222172", "HASSAN MARTHA BOLUWATIFE"),
+#     ("20222151", "AKINMADE RIDWAN OLADIMEJI"),
+#     ("20222193", "OLOMIYE WALIU OPEYEMI"),
+#     ("20224953", "ADEOTI HABEEB OMONIYI"),
+#     ("20222178", "ODUKOYA AYOMIDE ATOBA"),
+#     ("20222196", "OLUWAJANA TOLUWALASE CATHERINE"),
+#     ("20222138", "ADEGUNLE TOLULOPE EMMANUEL"),
+#     ("20222174", "KOLAWOLE ROTIMI GBENGA"),
+#     ("20222162", "BUSARI TOHEEB OLALEKAN"),
+#     ("20201810", "OLAKEHINDE MAHMUD ABIOLA"),
+#     ("20222145", "AFOLABI OLADIPUPO MOHAMMED"),
+#     ("20201829", "SORETIRE EPHRAIM OLUWADARASIMI"),
+# ]
+
+# def seed_students():
+#     conn = get_db_connection()
+#     cursor = conn.cursor()
+#     count = 0
+#     for student_id, name in STUDENTS:
+#         try:
+#             cursor.execute(
+#                 "INSERT INTO students (student_id, name) VALUES (?, ?)",
+#                 (student_id, name)
+#             )
+#             count += 1
+#         except Exception:
+#             pass  # skip duplicates silently
+#     conn.commit()
+#     conn.close()
+#     print(f"Seeded {count} students successfully.")
+
+# if __name__ == "__main__":
+#     seed_students()
+
+
 from database import get_db_connection
 
 STUDENTS = [
@@ -79,13 +174,15 @@ def seed_students():
     for student_id, name in STUDENTS:
         try:
             cursor.execute(
-                "INSERT INTO students (student_id, name) VALUES (?, ?)",
+                "INSERT INTO students (student_id, name) VALUES (%s, %s)",
                 (student_id, name)
             )
             count += 1
         except Exception:
-            pass  # skip duplicates silently
+            conn.rollback()  # rollback failed insert before continuing
+            pass
     conn.commit()
+    cursor.close()
     conn.close()
     print(f"Seeded {count} students successfully.")
 
